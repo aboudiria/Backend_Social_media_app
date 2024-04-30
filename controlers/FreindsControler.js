@@ -134,7 +134,7 @@ exports.acceptFriendRequest = async (req, res) => {
         const isSender = request.senderID.toString() === currentUser.toString();
         const isReceiver = request.receiverID.toString() === currentUser.toString();
 
-        if (actions.actionToExecute === actions.accept && isReceiver) {
+        if (actions[actionToExecute] === actions.accept && isReceiver) {
             request.requestStatus = "accepted";
             await request.save();
             const [sender, receiver] = await Promise.all([
@@ -145,13 +145,18 @@ exports.acceptFriendRequest = async (req, res) => {
             return res.status(200).json({ message: "Friend request accepted successfully" });
         }
 
-      if(!sender || !receiver){
-         return res
-         .status(404)
-         .json({message:"sender or receiver not found"});
-      }
+        if (!sender || !receiver) {
+            return res
+                .status(404)
+                .json({ message: "sender or receiver not found" });
+        };
+
+        return res.status(200).json({ message: "You are now friends" });
+
     } catch (err) {
         console.log(err);
         res.status(500).json(err);
     }
 };
+
+
